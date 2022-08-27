@@ -17,11 +17,40 @@ exports.createGroup = catchAsync(async (req, res) => {
 });
 
 exports.showGroup = catchAsync(async (req, res) => {
-  console.log("into the show group");
+  try {
+    const { phone } = req.body;
+    const data = await GroupsSchema.find();
 
-  const { phone } = req.body;
+    let dataAsPerPhone = [];
 
-  const data = await UsersSchema.find().populate("phonefromusers");
+    for (let inf of data) {
+      let temp = inf.members;
+      for (let i of temp) {
+        if (i.phone == phone) {
+          dataAsPerPhone.push(inf);
+        }
+      }
+    }
 
-  res.status(200).json({ message: "Fetched all the data", data });
+    res.status(200).json({ message: "Fetched all the data", dataAsPerPhone });
+  } catch {
+    res.status(500).json({ message: "Something went wrong" });
+  }
+});
+
+exports.deleteGroup = catchAsync(async (req, res) => {
+  console.log("into the delete group");
+
+  const data = await GroupsSchema.deleteOne({ _id });
+
+  res.status(200).json({ message: "Group deleted successfully", data });
+});
+
+exports.editGroup = catchAsync(async (req, res) => {
+  try {
+    const { _id, data } = req.body;
+    const res = await GroupsSchema.updateOne({ _id }, { data });
+  } catch {
+    res.status(500).json({ message: "Something went wrong" });
+  }
 });

@@ -64,7 +64,7 @@ exports.login = catchAsync(async (req, res, next) => {
       { user_id: user._id, phone },
       process.env.TOKEN_KEY,
       {
-        expiresIn: "2h",
+        // expiresIn: "2h",
       }
     );
 

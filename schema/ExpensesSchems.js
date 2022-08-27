@@ -11,14 +11,19 @@ const { Schema } = mongoose;
 // 	shettel : [ {who : String, amount : number, whom : String }]
 // 	expense : [ { giver : String, amount : number, taker : String}]
 
-const ExpensesSchema = new Schema({
-  expenseName: { type: String, required: true },
+const ExpensesSchema = new Schema(
+  {
+    expensename: { type: String, required: true },
 
-  groupId: { type: Schema.Types.ObjectId, ref: "groups" },
-  createdon: { type: Date, default: Date.now() },
-  setteled: { type: Boolean, default: false },
-  settel: [{ who: String, amount: Number, whom: String }],
-  expense: [{ giver: String, amount: Number, taker: String }],
-});
+    groupid: { type: mongoose.Schema.Types.ObjectId, ref: "groups" },
+    createdon: { type: Date, default: Date.now() },
+    setteled: { type: Boolean, default: false },
+    expense: [{ Name: String, Amount: Number }],
+  },
+  {
+    toJSON: { virtuals: true }, // So `res.json()` and other `JSON.stringify()` functions include virtuals
+    toObject: { virtuals: true },
+  }
+);
 
 module.exports = mongoose.model("expenses", ExpensesSchema);
