@@ -23,24 +23,32 @@ groups Schema
 
 */
 
-const GroupsSchema = new Schema({
-  // average : Number,
-  groupname: { type: String, required: true },
-  members: [
-    {
-      membersname: String,
-      phone: Number,
-      memebrId: {
-        firstname: { type: String, required: true },
-        lastname: String,
-        memberphone: { type: Number, required: true },
-        memberId: { type: Schema.Types.ObjectId, ref: "users" },
+const GroupsSchema = new Schema(
+  {
+    // average : Number,
+    groupname: { type: String, required: true },
+    members: [
+      {
+        membersfirstname: String,
+        phone: Number,
+        // memebrId: {
+        //   firstname: { type: String, required: true },
+        //   lastname: String,
+        //   memberphone: { type: Number, required: true },
+        //   memberId: { type: Schema.Types.ObjectId, ref: "users" },
+        // },
       },
-    },
-  ],
-  image: { type: Number, required: true },
-  epxenses: [{ epenseId: { type: Schema.Types.ObjectId, ref: "expenses" } }],
-  createdon: { type: Date, default: Date.now() },
-});
+    ],
+    image: { type: Number },
+    // epxenses: [{ epenseId: { type: Schema.Types.ObjectId, ref: "expenses" } }],
+    createdon: { type: Date, default: Date.now() },
+  },
+  {
+    toJSON: { virtuals: true }, // So `res.json()` and other `JSON.stringify()` functions include virtuals
+    toObject: { virtuals: true },
+  }
+);
+
+
 
 module.exports = mongoose.model("groups", GroupsSchema);
