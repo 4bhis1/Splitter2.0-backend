@@ -10,22 +10,29 @@ exports.getUser = catchAsync(async (req, res, next) => {
 });
 
 exports.register = catchAsync(async (req, res, next) => {
+  // console.log("Register got fired");
+
   try {
+    // console.log(">>>?>?>?>?>?> requestBody", req.body);
     const { firstname, lastname, email, password, phone } = req.body;
 
     if (!(firstname && lastname && email && password && phone)) {
+      // console.log("Cursor is here");
       res.status(400).json({ message: "all inputs is required" });
     }
 
-    const oldUser = await UserSchema.find({ phone: phone });
+    const oldUser = await UserSchema.find({ phone });
 
+    // console.log(">>>>>>?>>>> olduser", oldUser);
     if (oldUser[0]) {
-      return res.status(409).send("User Already Exist. Please Login");
+      return res
+        .status(409)
+        .send({ message: "User Already Exist. Please Login", result: false });
     }
 
     const encryptedPassword = await bcrypt.hash(password, 10);
 
-    let user = await UserSchema.create({
+    await UserSchema.create({
       firstname,
       lastname,
       email: email.toLowerCase(),
@@ -43,10 +50,10 @@ exports.register = catchAsync(async (req, res, next) => {
 
     // user.token = token;
 
-    res.status(201).json({ message: "Succesfully Signed in" });
+    res.status(201).json({ message: "Succesfully Signed in", result: true });
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: "something went wrong" });
+    res.status(500).json({ message: "something went wrong", result: false });
   }
 });
 
@@ -71,6 +78,9 @@ exports.login = catchAsync(async (req, res, next) => {
     // will store a token into the local storage and whenever query will be sent it will be sent using toke
 
     // user
-    res.status(200).json({ message: "Succesfully logedin", token });
-  } else res.status(200).json("Invalid credentials");
+    res
+      .status(200)
+      .json({ message: "Succesfully logedin", token, result: true });
+  } else
+    res.status(200).json({ message: "Invalid credentials", result: false });
 });
