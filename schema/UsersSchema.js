@@ -10,7 +10,7 @@ const UserSchema = new Schema(
     phone: { type: Number, required: true, unique: true },
     password: { type: String, required: true },
     createdon: { type: Date, default: Date.now() },
-    // token: { type: String },
+    token: { type: String },
   },
   {
     toJSON: { virtuals: true }, // So `res.json()` and other `JSON.stringify()` functions include virtuals
