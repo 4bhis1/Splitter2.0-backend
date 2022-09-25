@@ -46,4 +46,4 @@ let simplifyExpense = (obj) => {
   return { temp, result };
 };
 
-export default simplifyExpense;
+exports.simplifyExpense = simplifyExpense;

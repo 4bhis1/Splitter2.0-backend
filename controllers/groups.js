@@ -41,7 +41,7 @@ exports.showGroup = catchAsync(async (req, res) => {
 exports.deleteGroup = catchAsync(async (req, res) => {
   console.log("into the delete group");
 
-  const data = await GroupsSchema.deleteOne({ _id });
+  const data = await GroupsSchema.deleteOne({ _igroupidd });
 
   res.status(200).json({ message: "Group deleted successfully", data });
 });
