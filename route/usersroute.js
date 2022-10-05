@@ -1,7 +1,6 @@
 const express = require("express");
 
 const { getUser, register, login } = require("../controllers/users");
-const { create } = require("../schema/GroupsSchema");
 
 const router = express.Router();
 

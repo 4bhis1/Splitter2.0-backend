@@ -18,7 +18,8 @@ const ExpensesSchema = new Schema(
     groupid: { type: mongoose.Schema.Types.ObjectId, ref: "groups" },
     createdon: { type: Date, default: Date.now() },
     setteled: { type: Boolean, default: false },
-    expense: [{ name: String, amount: Number, phone : Number }],
+    expense: [{ name: String, amount: Number, phone: Number }],
+    chat: [{ name: String, text: String, chatdate: { type: Date, default: Date.now() } }],
   },
   {
     toJSON: { virtuals: true }, // So `res.json()` and other `JSON.stringify()` functions include virtuals

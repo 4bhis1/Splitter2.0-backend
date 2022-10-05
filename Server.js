@@ -4,6 +4,7 @@ const { connectToDatabase } = require("./database/Connect");
 const userRoute = require("./route/usersroute");
 const groupRoute = require("./route/groupsroute");
 const expenseRoute = require("./route/expenseroute");
+const PERouter = require("./route/PEroute");
 
 // const postsandauthors = require("./Route/postsAnsAuthor");
 
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use("/api/v1/users", userRoute);
 app.use("/api/v1/groups", groupRoute);
 app.use("/api/v1/expenses/", expenseRoute);
+app.use("/api/v1/PE/", PERouter);
 
 // app.use("/",postsandauthors);
 
