@@ -7,7 +7,7 @@ const { Schema } = mongoose;
 const PESchema = new Schema(
   {
     userid: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
-    name: { type: String, required: true },
+    expensename: { type: String, required: true },
     debitType: String,
     debit: Number,
     creditType: String,

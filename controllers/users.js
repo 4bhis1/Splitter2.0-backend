@@ -16,7 +16,7 @@ exports.register = catchAsync(async (req, res, next) => {
     // console.log(">>>?>?>?>?>?> requestBody", req.body);
     const { firstname, lastname, email, password, phone } = req.body;
 
-    if (!(firstname &groupid& lastname && email && password && phone)) {
+    if (!(firstname & groupid & lastname && email && password && phone)) {
       // console.log("Cursor is here");
       res.status(400).json({ message: "all inputs is required", result: false });
     }
@@ -78,4 +78,20 @@ exports.login = catchAsync(async (req, res, next) => {
     // user
     res.status(200).json({ message: "Succesfully logedin", token, result: true });
   } else res.status(400).json({ message: "Password Not Correct", result: false });
+});
+
+exports.getdata = catchAsync(async (req, res, next) => {
+  console.log("inside data");
+  const { phone } = req.body;
+
+  if (phone.length === 10) {
+    let data = await UserSchema.findOne({ phone }, { firstname: 1, lastname : 1 });
+
+    console.log(data);
+
+    if (data) res.status(200).json({ data });
+    else res.status(400).json({ message: "No phone found in database" });
+  } else {
+    res.status(400).json({ message: "Phone number is not valid" });
+  }
 });
