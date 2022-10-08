@@ -8,10 +8,9 @@ const PESchema = new Schema(
   {
     userid: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
     expensename: { type: String, required: true },
-    debitType: String,
     debit: Number,
-    creditType: String,
     credit: Number,
+    description: String,
     createdon: { type: Date, default: Date.now() },
   },
   {

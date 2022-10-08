@@ -81,13 +81,10 @@ exports.login = catchAsync(async (req, res, next) => {
 });
 
 exports.getdata = catchAsync(async (req, res, next) => {
-  console.log("inside data");
   const { phone } = req.body;
 
   if (phone.length === 10) {
-    let data = await UserSchema.findOne({ phone }, { firstname: 1, lastname : 1 });
-
-    console.log(data);
+    let data = await UserSchema.findOne({ phone }, { firstname: 1, lastname: 1 });
 
     if (data) res.status(200).json({ data });
     else res.status(400).json({ message: "No phone found in database" });

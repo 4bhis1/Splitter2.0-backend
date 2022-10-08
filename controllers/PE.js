@@ -3,13 +3,13 @@ const catchAsync = require("../utils/catchAsync");
 
 // shoe expense
 exports.showExpenses = catchAsync(async (req, res, next) => {
-  console.log("show Personal Expense", req.body);
+  console.log("inside show Personal Expense");
   try {
     const { userid } = req.body;
 
     let data = await PESchema.find({ userid });
 
-    console.log(data);
+    // console.log(data);
 
     res.status(200).json({ message: "data recieved successfully", data });
   } catch (err) {
@@ -28,14 +28,13 @@ exports.editExpense = catchAsync(async (req, res, next) => {
   }
 });
 
-
 // succesfully ho gya
 exports.createExpenses = catchAsync(async (req, res, next) => {
   try {
     console.log("into create Expense of PE");
-    const { userid, name, debitType, debit, creditType, credit } = req.body;
+    const { userid, expensename, debit, credit, description } = req.body;
 
-    await PESchema.create({ userid, name, debitType, debit, creditType, credit });
+    await PESchema.create({ userid, expensename, debit, credit, description });
 
     res.status(200).json({ message: "expenses created successfully" });
   } catch (err) {
