@@ -16,7 +16,7 @@ exports.register = catchAsync(async (req, res, next) => {
     // console.log(">>>?>?>?>?>?> requestBody", req.body);
     const { firstname, lastname, email, password, phone } = req.body;
 
-    if (!(firstname & groupid & lastname && email && password && phone)) {
+    if (!(firstname && lastname && email && password && phone)) {
       // console.log("Cursor is here");
       res.status(400).json({ message: "all inputs is required", result: false });
     }

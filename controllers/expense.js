@@ -82,3 +82,18 @@ exports.createExpenses = catchAsync(async (req, res, next) => {
     res.status(500).json({ message: "something went wrong" });
   }
 });
+
+exports.addChat = catchAsync(async (req, res, next) => {
+  // chat: [{ name: String, text: String, phone: Number, chatdate: { type: Date, default: Date.now() } }],
+
+  try {
+    console.log("into addChat");
+    const { name, text, phone, groupid } = req.body;
+
+    await ExpensesSchema.findOneAndUpdate({ _id: groupid }, { $push: { chat: { name, text, phone } } });
+
+    res.status(200).json({ message: "expenses created successfully" });
+  } catch (err) {
+    res.status(500).json({ message: "something went wrong" });
+  }
+});
