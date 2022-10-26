@@ -4,6 +4,8 @@ const mongoose = require("mongoose");
 
 const { Schema } = mongoose;
 
+const date = new Date();
+
 const PESchema = new Schema(
   {
     userid: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
@@ -11,7 +13,11 @@ const PESchema = new Schema(
     debit: Number,
     credit: Number,
     description: String,
-    createdon: { type: Date, default: Date.now() },
+    createdon: {
+      date: { type: Number, default: date.getDate() },
+      month: { type: Number, default: date.getMonth() },
+      year: { type: Number, default: date.getFullYear() },
+    },
   },
   {
     toJSON: { virtuals: true }, // So `res.json()` and other `JSON.stringify()` functions include virtuals

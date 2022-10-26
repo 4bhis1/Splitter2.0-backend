@@ -1,4 +1,8 @@
 const ExpensesSchema = require("../schema/ExpensesSchems");
+const NotificationSchema = require("../schema/NotificationSchema");
+const UserSchema = require("../schema/UsersSchema");
+const GroupsSchema = require("../schema/GroupsSchema");
+
 const catchAsync = require("../utils/catchAsync");
 const { Calculate } = require("./lib/Calculation");
 
@@ -14,41 +18,28 @@ exports.getExpenses = catchAsync(async (req, res, next) => {
 exports.showExpenses = catchAsync(async (req, res, next) => {
   // console.log("show Expenses", req.body);
   try {
-    // console.log("insirde try");
     const { groupid } = req.body;
-    // console.log("group id", groupid);
 
-    let data = await ExpensesSchema.find({ groupid: groupid });
+    let data = await ExpensesSchema.find(
+      { groupid: groupid },
+      {
+        expensename: 1,
+        groupid: 1,
+        createdon: 1,
+        setteled: 1,
+        expense: 1,
+      }
+    );
 
     let resultToShow = [];
 
     for (let inf of data) {
       const { result, avg } = Calculate(inf.expense);
-      // let temp = {};
-      // console.log(result, avg);
-      // temp._id = inf._id;
-
-      // console.log(result,avg)
-
-      // temp.expensename = inf.expensename;
-      // temp.groupid = inf.groupid;
-      // temp.createdon = inf.createdon;
-      // temp.setteled = inf.setteled;
-      // temp.expense = inf.expense;
-      // temp.result = result;
-      // temp.avg = avg;
-      // console.log("temp data is here >>>>>>>>>>>>>>>", temp);
       resultToShow.push(result);
     }
-    // console.log(resultToShow);
 
     console.log(simplifyExpense(resultToShow));
 
-    // console.log(Calculate(data.expense));
-
-    // data.summary =
-    // console.log(data);
-    // console.log("Expenses`", resultToShow);
     let final = { data: data, result: simplifyExpense(resultToShow) };
 
     res.status(200).json({ message: "data recieved successfully", final });
@@ -58,6 +49,23 @@ exports.showExpenses = catchAsync(async (req, res, next) => {
   }
 });
 
+exports.showChat = catchAsync(async (req, res, next) => {
+  // console.log("into show chat", req.body);
+  try {
+    const { groupid } = req.body;
+
+    let data = await ExpensesSchema.find({ _id: groupid }, { chat: 1 });
+
+    console.log("????", data);
+
+    res.status(200).json({ message: "data recieved successfully", data });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "something went wrong" });
+  }
+});
+
+/// Abhi ispe kaam nhi ho rha h
 exports.editExpense = catchAsync(async (req, res, next) => {
   try {
     const { _id, data } = req.body;
@@ -71,14 +79,35 @@ exports.editExpense = catchAsync(async (req, res, next) => {
 exports.createExpenses = catchAsync(async (req, res, next) => {
   try {
     console.log("into craete Expense");
-    const { expensename, groupid, expense } = req.body;
+    const { expensename, groupid, expense, userPhone, groupname } = req.body;
 
-    console.log("expenses are here", expense);
+    // console.log("expenses are here", expense);
 
     await ExpensesSchema.create({ expensename, groupid, expense });
 
+    const Notification = [];
+
+    let { firstname, lastname } = await UserSchema.findOne({ userPhone }, { firstname: 1, lastname: 1 });
+
+    // console.log("firstName is here", firstname, Notification);
+
+    for (let i of expense) {
+      if (i.phone != userPhone) {
+        console.log("i -=>", i);
+        Notification.push({
+          receiverPhoneNumber: i.phone,
+          action: `${firstname} added ${expensename} in ${groupname}`,
+        });
+      }
+    }
+
+    // console.log("Notifications ", Notification);
+
+    await NotificationSchema.insertMany(Notification);
+
     res.status(200).json({ message: "expenses created successfully" });
   } catch (err) {
+    console.log("errror in createExpense", err);
     res.status(500).json({ message: "something went wrong" });
   }
 });
@@ -91,6 +120,10 @@ exports.addChat = catchAsync(async (req, res, next) => {
     const { name, text, phone, groupid } = req.body;
 
     await ExpensesSchema.findOneAndUpdate({ _id: groupid }, { $push: { chat: { name, text, phone } } });
+
+    // const data = ExpensesSchema.find()
+
+    // const name = GroupsSchema.find({_id:}) 
 
     res.status(200).json({ message: "expenses created successfully" });
   } catch (err) {
